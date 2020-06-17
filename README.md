@@ -48,7 +48,7 @@ Any `conftest` policy message should start with a jsonpath expression for augmen
 Example:
 
 ```
-"$.spec.template.spec.containers[*]?(@.securityContext.privileged == true): `privileged: true` is forbidden"
+"spec.template.spec.containers[*]?(@.securityContext.privileged == true): `privileged: true` is forbidden"
 ```
 
 Beyond that, all you need is providing `conflint` enough information about for which files and with which policy it should run `conftest`:
