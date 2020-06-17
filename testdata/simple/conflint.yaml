@@ -1,0 +1,4 @@
+conftest:
+- files:
+  - app1/*.yaml
+  policy: app1/policy

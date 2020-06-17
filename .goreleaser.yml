@@ -1,0 +1,30 @@
+project_name: conflint
+builds:
+  - id: conflint
+    main: ./cmd/main
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X github.com/mumoshu/conflint/Version={{.Version}}
+changelog:
+  filters:
+    # commit messages matching the regexp listed here will be removed from
+    # the changelog
+    # Default is empty
+    exclude:
+      - '^docs:'
+      - typo
+dockers:
+  - goos: linux
+    goarch: amd64
+    goarm: ''
+    binaries:
+      - conflint
+    builds:
+      - conflint
+    image_templates:
+      - "mumoshu/conflint:latest"
+      - "mumoshu/conflint:{{ .Tag }}"
+      - "mumoshu/conflint:v{{ .Major }}"
+    build_flag_templates:
+      - "--pull"

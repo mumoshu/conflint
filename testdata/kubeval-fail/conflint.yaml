@@ -1,0 +1,3 @@
+kubeval:
+- files:
+  - app1/*.yaml
