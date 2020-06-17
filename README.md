@@ -32,6 +32,11 @@ Error: found 1 linter error
 
 - [reviewdog](https://github.com/reviewdog/reviewdog)
 
+## Installation
+
+- Pull [official docker images](https://hub.docker.com/repository/docker/mumoshu/conflint) containing conflint, conftest, kubeeval, and reviewdog binaries.
+- Grab [release binaries](https://github.com/mumoshu/conflint/releases)
+
 ## Usage
 
 `conflint run` runs linters as configured in your `conflint.yaml`. Include one or more configuration section(s) depending on which linter you want `conflint` to run.
