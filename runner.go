@@ -1,6 +1,8 @@
 package conflint
 
 import (
+	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -213,9 +215,23 @@ func (r *Runner) Run() error {
 					fmt.Fprintf(os.Stderr, "DEBUG: running kubeval %s: %v\n", strings.Join(args, " "), err)
 				}
 
+				var effectiveLines []string
+
+				allLines := bufio.NewScanner(bytes.NewReader(out))
+				for allLines.Scan() {
+					line := allLines.Text()
+
+					if strings.HasPrefix(line, "WARN - Set to ignore missing schemas") {
+
+					} else {
+						effectiveLines = append(effectiveLines, line)
+					}
+				}
+
 				var conftestOut KubevalOutput
 
-				if err := yaml.Unmarshal(out, &conftestOut); err != nil {
+				jsonDocText := []byte(strings.Join(effectiveLines, "\n"))
+				if err := yaml.Unmarshal(jsonDocText, &conftestOut); err != nil {
 					fmt.Fprintf(os.Stderr, "kubeeval failed with output:\n%s", string(out))
 
 					return fmt.Errorf("unmarshalling yaml: %w", err)
