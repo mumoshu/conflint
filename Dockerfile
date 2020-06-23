@@ -1,5 +1,3 @@
-FROM garethr/kubeval:0.15.0 as kubeval
-
 FROM golang:1.14 as build
 
 LABEL maintainer="Yusuke KUOKA <https://github.com/mumoshu/conflint/issues>" \
@@ -24,15 +22,24 @@ RUN curl -LO https://github.com/instrumenta/conftest/releases/download/v0.19.0/c
  && tar xzf conftest_0.19.0_Linux_x86_64.tar.gz \
  && mv conftest /usr/local/bin
 
+RUN curl -LO https://github.com/instrumenta/kubeval/releases/download/0.15.0/kubeval-linux-amd64.tar.gz \
+ && tar xzf kubeval-linux-amd64.tar.gz \
+ && mv kubeval /usr/local/bin
+
 WORKDIR /build
 
 COPY ./conflint /build
 
 FROM ubuntu:20.04 as runtime
 
-COPY --from=kubeval /usr/local/bin/kubeval /usr/local/bin/kubeval
+COPY --from=build /usr/local/bin/kubeval /usr/local/bin/kubeval
 COPY --from=build /usr/local/bin/conftest /usr/local/bin/conftest
 COPY --from=build /usr/local/bin/reviewdog /usr/local/bin/reviewdog
 COPY --from=build /build/conflint /usr/local/bin/conflint
 
 ENV PATH=/bin:/usr/bin:/usr/local/bin
+
+RUN conftest --version \
+ && kubeval --version \
+ && reviewdog --version \
+ && conflint -h
