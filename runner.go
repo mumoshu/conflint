@@ -83,6 +83,13 @@ func (r *Runner) Run() error {
 
 	var output int
 
+	if len(config.Conftest) > 0 {
+		_, err := exec.LookPath("conftest")
+		if err != nil {
+			return fmt.Errorf("looking for executable: \"conftest\" not found in PATH")
+		}
+	}
+
 	for _, ct := range config.Conftest {
 		for _, fp := range ct.Files {
 			files, err := filepath.Glob(filepath.Join(r.WorkDir, fp))
@@ -160,6 +167,13 @@ func (r *Runner) Run() error {
 		}
 	}
 
+	if len(config.Kubeval) > 0 {
+		_, err := exec.LookPath("kubeval")
+		if err != nil {
+			return fmt.Errorf("looking for executable: \"kubeval\" not found in PATH")
+		}
+	}
+
 	for _, ke := range config.Kubeval {
 		for _, fp := range ke.Files {
 			files, err := filepath.Glob(filepath.Join(r.WorkDir, fp))
@@ -191,6 +205,7 @@ func (r *Runner) Run() error {
 						args = append(args, "--additional-schema-locations", strings.Join(ke.SchemaLocations[1:], ","))
 					}
 				}
+
 				cmd := exec.Command("kubeval", args...)
 				cmd.Dir = r.WorkDir
 				out, err := cmd.CombinedOutput()
