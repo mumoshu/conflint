@@ -216,7 +216,9 @@ func (r *Runner) Run() error {
 				var conftestOut KubevalOutput
 
 				if err := yaml.Unmarshal(out, &conftestOut); err != nil {
-					return err
+					fmt.Fprintf(os.Stderr, "kubeeval failed with output:\n%s", string(out))
+
+					return fmt.Errorf("unmarshalling yaml: %w", err)
 				}
 
 				for _, res := range conftestOut {
