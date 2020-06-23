@@ -32,6 +32,11 @@ COPY ./conflint /build
 
 FROM ubuntu:20.04 as runtime
 
+RUN apt-get update -y \
+ && apt-get install -y git \
+ && rm -rf /var/lib/apt/lists/* \
+ && rm -rf /tmp/* /var/tmp/*
+
 COPY --from=build /usr/local/bin/kubeval /usr/local/bin/kubeval
 COPY --from=build /usr/local/bin/conftest /usr/local/bin/conftest
 COPY --from=build /usr/local/bin/reviewdog /usr/local/bin/reviewdog
@@ -39,7 +44,8 @@ COPY --from=build /build/conflint /usr/local/bin/conflint
 
 ENV PATH=/bin:/usr/bin:/usr/local/bin
 
-RUN conftest --version \
+RUN git version \
+ && conftest --version \
  && kubeval --version \
  && reviewdog --version \
  && conflint -h
