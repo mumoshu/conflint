@@ -165,8 +165,6 @@ jobs:
     - name: conflint
       run: |
         set -vx
-        apt-get update -y
-        apt-get install git -y
         export CONFLINT_LOG=DBEUG
         conflint run -efm "%f:%l:%c: %m" || true
         conflint run -efm "%f:%l:%c: %m" | reviewdog -efm="%f:%l:%c: %m" -reporter=github-pr-check -tee
