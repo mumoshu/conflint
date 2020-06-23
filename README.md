@@ -141,3 +141,35 @@ To run reviewdog with conflint on GitHub Actions, use this snippet:
 ```
 
 Please see [reviewdog's official documentation](https://github.com/reviewdog/reviewdog#option-2-install-reviewdog-github-apps) for how you can run it as a GitHub app.
+
+## GitHub Pull Request Check with conflint
+
+This is possible by running `conflint` and `reviewdog` on GitHub Actions.
+
+Use a workflow definition like the one below:
+
+```
+name: lint
+
+on:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    container: mumoshu/conflint:latest
+    env:
+      REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: conflint
+      run: |
+        set -vx
+        apt-get update -y
+        apt-get install git -y
+        export CONFLINT_LOG=DBEUG
+        conflint run -efm "%f:%l:%c: %m" || true
+        conflint run -efm "%f:%l:%c: %m" | reviewdog -efm="%f:%l:%c: %m" -reporter=github-pr-check -tee
+```
+
+See [gitops-demo](https://github.com/mumoshu/gitops-demo/blob/master/.github/workflows/lint.yml) repository for a working example, and [a check failure](https://github.com/mumoshu/gitops-demo/pull/2/files#diff-de00537bb5e8739d8c2bce941858ef79R8) reported by it.
