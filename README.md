@@ -2,6 +2,8 @@
 
 `conflint` is an unified lint runners for various configuration files.
 
+![image](https://user-images.githubusercontent.com/22009/85349934-b9504e80-b53a-11ea-9af4-1faa53a0d102.png)
+
 It can run multiple lint runners in oneshot and output the result in a consistent and portable format so that
 you can use it with e.g. [reviewdog](https://github.com/reviewdog/reviewdog) for surfacing the result as GitHub Pull Request reviews.
 
