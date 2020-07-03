@@ -7,6 +7,8 @@
 It can run multiple lint runners in oneshot and output the result in a consistent and portable format so that
 you can use it with e.g. [reviewdog](https://github.com/reviewdog/reviewdog) for surfacing the result as GitHub Pull Request reviews.
 
+Compare vanilla output from the original tool and output from `conflint` to see how it works. It's really simple.
+
 Vanilla `conftest`:
 
 ```console
@@ -24,6 +26,12 @@ $ conflint run
 app1/nginx.deploy.yaml:15:11: `privileged: true` is forbidden
 Error: found 1 linter error
 ```
+
+So, basically it runs various linters and aggregate results.
+
+The small but important feature of it is to add line and colum numbers to every single lint error. This is achieved by assuming the beginning of every lint error message as a JSON Path-like notation.
+
+`conflint` parses the path and searches for the YAML node at the path, and obtains the line and colum number to augument the output, so that the numbers can be used to annotate pull request diff line by line.
 
 ## Supported linters
 
